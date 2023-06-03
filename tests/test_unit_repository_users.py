@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from sqlalchemy.orm import Session
 from src.repository.users import get_user_by_email, create_user, update_token, confirmed_email, update_password, update_avatar
 from src.database.models import User
-from src.schemas import UserModel
+from src.schemas import  UserModel
 
 
 class UserRepositoryTests(unittest.TestCase):
@@ -116,8 +116,32 @@ class UserRepositoryTests(unittest.TestCase):
         self.assertTrue(self.user.confirmed)
         self.session.commit.assert_called_once()
 
+    def test_create_user_ifnot(self):
+        # Arrange
+        email = 'test@example.com'
+        username = 'test_user'
+        user_data = UserModel(email=email, username=username, password='password')
+        avatar_url = 'https://example.com/avatar.jpg'
 
+        g_mock = MagicMock()
+        g_mock.get_image.side_effect = Exception("Failed to get Gravatar image")
 
+        Gravatar_mock = MagicMock(return_value=g_mock)
+        patcher = patch('src.repository.users.Gravatar', Gravatar_mock)
+        patcher.start()
+
+        # Act
+        created_user = create_user(user_data, self.session)
+
+        # Assert
+        self.assertEqual(created_user.email, email)
+        self.assertIsNone(created_user.avatar)
+        self.assertEqual(created_user.username, username)
+        self.session.add.assert_called_once_with(created_user)
+        self.session.commit.assert_called_once()
+        self.session.refresh.assert_called_once_with(created_user)
+
+        patcher.stop()
 
 
 if __name__ == '__main__':

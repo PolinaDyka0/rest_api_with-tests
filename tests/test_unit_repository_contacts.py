@@ -32,7 +32,7 @@ class ContactRepositoryTests(unittest.TestCase):
 
     def test_search_contacts_not_found(self):
         # Arrange
-        query = ''
+        query = None
         expected_contacts = []
         # Act
         contacts = search_contacts(self.session, query, self.user)

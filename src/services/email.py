@@ -23,7 +23,7 @@ conf = ConnectionConfig(
 )
 
 
-async def send_email(email: EmailStr, username: str, host: str):
+def send_email(email: EmailStr, username: str, host: str):
 
     try:
         token_verification = auth_service.create_email_token({"sub": email})
@@ -35,12 +35,12 @@ async def send_email(email: EmailStr, username: str, host: str):
         )
 
         fm = FastMail(conf)
-        await fm.send_message(message, template_name="email_template.html")
+        fm.send_message(message, template_name="email_template.html")
     except ConnectionErrors as err:
         print(err)
 
 
-async def send_password_reset_email(email: EmailStr, username: str, host: str):
+def send_password_reset_email(email: EmailStr, username: str, host: str):
     token_verification = auth_service.create_email_token({"sub": email})
 
     try:
@@ -52,7 +52,7 @@ async def send_password_reset_email(email: EmailStr, username: str, host: str):
         )
 
         fm = FastMail(conf)
-        await fm.send_message(message, template_name="password_reset_template.html")
+        fm.send_message(message, template_name="password_reset_template.html")
     except ConnectionErrors as err:
         print(err)
 

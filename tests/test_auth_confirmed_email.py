@@ -45,7 +45,7 @@ def test_confirmed_email_already_confirmed(mock_get_email_from_token, mock_get_u
 def test_confirmed_email_success(mock_get_email_from_token, mock_get_user_by_email, mock_confirmed_email):
     user = MagicMock(confirmed=False)
     mock_get_user_by_email.return_value = user
-    response = confirmed_email("test_token", db=None)  # Додано `db=None` як фіктивний аргумент
+    response = confirmed_email("test_token", db=None)
     assert response == {"message": "Email confirmed"}
     mock_confirmed_email.assert_called_once_with("test@example.com", None)
 

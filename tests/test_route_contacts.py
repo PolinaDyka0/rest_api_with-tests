@@ -138,7 +138,7 @@ def test_update_contact_not_found(client, token):
         assert response.status_code == 404, response.text
 
 
-def test_delete_tag(client, token):
+def test_delete_contact(client, token):
     with patch.object(auth_service, 'r') as r_mock:
         r_mock.get.return_value = None
         response = client.delete(
@@ -156,7 +156,7 @@ def test_delete_tag(client, token):
         assert "id" in data
 
 
-def test_repeat_delete_tag(client, token):
+def test_repeat_delete_contact(client, token):
     with patch.object(auth_service, 'r') as r_mock:
         r_mock.get.return_value = None
         response = client.delete(
@@ -164,3 +164,4 @@ def test_repeat_delete_tag(client, token):
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 404, response.text
+
